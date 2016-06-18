@@ -1,7 +1,8 @@
-import time, datetime, json, os, requests, urllib, subprocess
+import time, json, os, requests, urllib
 import bs4 as BeautifulSoup
+from datetime import datetime, timedelta
 
-NDAYS = 5
+NDAYS = 6
 CONFIG_FILE = 'config.json'
 
 def open_and_load_config():
@@ -63,7 +64,7 @@ def parse(html, config):
 
 def main():
     config = open_and_load_config()
-    dt = datetime.datetime.now() + datetime.timedelta(days=NDAYS)
+    dt = datetime.now() + timedelta(days=NDAYS)
     d = dt.strftime("%d/%m/%Y")
     print d
     if (True):
