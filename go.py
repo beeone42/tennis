@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import time, json, os, requests, urllib
 import bs4 as BeautifulSoup
 from datetime import datetime, timedelta
@@ -41,7 +43,9 @@ def search(cookies, jour):
 def alert(config, txt, fulltxt):
     payload = { 'token': config['slack-token'],
                 'channel': config['slack-channel'],
-                'as_user': 'true',
+                'as_user': 'false',
+                'username': 'tennisbot',
+                'icon_emoji': ':tennis:',
                 'text': txt,
                 'attachments': '[{ "text": "%s"} ]' % fulltxt }
     r = requests.post('https://slack.com/api/chat.postMessage', data = payload)
