@@ -21,23 +21,30 @@ def get_cookie():
     return r.cookies
 
 def login(cookies, user, passwd):
+    headers = { 'referer': 'https://teleservices.paris.fr/srtm/initApplicationWeb.action' }
     payload = { 'login': user, 'password': passwd }
     r = requests.post('https://teleservices.paris.fr/srtm/authentificationConnexion.action',
-                      cookies=cookies, data = payload)
+                      cookies=cookies, data = payload, headers = headers)
+    f = open("auth.html", 'w')
+    f.write(r.text.encode('ascii', 'replace'))
+    f.close()
+
     return 'Rechercher un court' in r.text
 
 def auth(user, passwd):
     cookies = get_cookie()
     r = login(cookies, user, passwd)
+    print r
     return cookies
 
 def search(cookies, jour):
+    headers = { 'referer': 'https://teleservices.paris.fr/srtm/reservationCreneauInit.action' }
     payload = { 'provenanceCriteres': 'true', 'libellePlageHoraire=': 'journee', 'nomCourt': '',
                 'actionInterne': 'recherche', 'champ': '', 'recherchePreferee': 'on', 'tennisArrond': '',
                 'arrondissement': '', 'arrondissement2': '', 'arrondissement3': '', 
                 'dateDispo': jour, 'plageHoraireDispo': '8@21', 'revetement': '', 'court': '' }
     r = requests.post('https://teleservices.paris.fr/srtm/reservationCreneauListe.action',
-                      cookies=cookies, data = payload)
+                      cookies=cookies, data = payload, headers = headers)
     return r.text
 
 def alert(config, txt, fulltxt):
@@ -74,6 +81,9 @@ def main():
     if (True):
         cookies = auth(config['tennis-login'], config['tennis-pass'])
         res = search(cookies, d)
+        f = open("tmp.html", 'w')
+        f.write(res.encode('ascii', 'ignore'))
+        f.close()
     else:
         with open('res.html', 'r') as content_file:
             res = content_file.read()
